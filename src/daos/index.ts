@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import ProductDaoMongo from './products/productDaoMongo'
 dotenv.config()
 
 let ProductDao:any
@@ -12,14 +11,15 @@ switch(process.env.DATABASE){
 
 
         break;
-
-    case'mongo':
-        const ProductDao = new ProductDaoMongo()//await import('./products/productDaoMongo')
-        // const CartDao = new CartDaoMongo()
-
+    
+    case'mongodb':
+        import('./products/productDaoMongo').then( 
+            (dao) => (ProductDao = dao.default)
+        )  // const CartDao = new CartDaoMongo()
     
     break;
     default:
-        break;
+        ProductDao = require('./product/productDaoMongo')
+    break
 }
 export {ProductDao,CartDao}
