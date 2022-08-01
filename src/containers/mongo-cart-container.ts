@@ -18,17 +18,22 @@ class MongoCartContainer {
         }
     }
 
-    async addProduct(id, data: { products: any; }) {
+    async addProduct(id, id_prod) {
         const ObjectId = require('mongodb').ObjectID; 
         const o_id = new ObjectId(id);
+        const o_id_prod = new ObjectId(id_prod)
         try {
             const selectedCart = await cartModel.findById({'_id': o_id})
-            const productToAdd = await productModel.findById({'_id': o_id})
+            const productToAdd = await productModel.findById({'_id': o_id_prod})
+            const option = {new: true}
+            console.log("selectedCart", selectedCart)
+            console.log("productToAdd", productToAdd)
 
             if (selectedCart && productToAdd) {
-                const productsAddtion = [...selectedCart.products, data];
-                console.log('productsAddtion',productsAddtion)
-                return await cartModel.updateOne(id, {products:productsAddtion})
+                const updatedDocument = await cartModel.findOneAndUpdate({selectedCart}, { $addToSet: { products: productToAdd} })
+                // const productsAddtion = selectedCart.products.push(productToAdd) ;
+                console.log('updatedDocument',updatedDocument)
+                // return await cartModel.updateOne(id, {products:productsAddtion})
             } else {
                 console.log('Lo sentimos, no pudimos agregar el producto')
             }
