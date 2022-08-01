@@ -15,11 +15,15 @@ switch(process.env.DATABASE){
     case'mongodb':
         import('./products/productDaoMongo').then( 
             (dao) => (ProductDao = dao.default)
-        )  // const CartDao = new CartDaoMongo()
+        )
+        import('./carts/cartDaoMongo').then( 
+            (daoCart) => (CartDao = daoCart.default)
+        )   
     
     break;
     default:
-        ProductDao = require('./product/productDaoMongo')
+        ProductDao = require('./products/productDaoMongo')
+        CartDao = require('./carts/cartDaoMongo')
     break
 }
 export {ProductDao,CartDao}

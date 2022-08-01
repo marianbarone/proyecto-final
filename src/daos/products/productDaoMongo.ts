@@ -1,4 +1,4 @@
-import MongoContainer from '../../containers/mongo-container'
+import MongoContainer from '../../containers/mongo-product-container'
 
 class ProductDaoMongo extends MongoContainer {
     constructor(){
