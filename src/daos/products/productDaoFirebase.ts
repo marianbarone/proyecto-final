@@ -1,9 +1,9 @@
-// import FirebaseContainer from '../../containers/firebase-container'
+import FirebaseProductContainer from '../../containers/firebase-product-container'
 
-// class ProductDaoFirebase extends FirebaseContainer {
-//     constructor() {
-//         super('products')
-//     }
-// }
+class ProductDaoFirebase extends FirebaseProductContainer {
+    constructor() {
+        super()
+    }
+}
 
-// export default ProductDaoFirebase;
+export default ProductDaoFirebase;

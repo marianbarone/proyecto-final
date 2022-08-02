@@ -6,9 +6,12 @@ let CartDao:any
 
 switch(process.env.DATABASE){
     case'firebase':
-        // const { default:ProductDaoFirebase} = await import('./products/productDaoFirebase')
-        // const { default:CartDaoFirebase } =  await import('./carts/cartDaoFirebase')
-
+        import('./products/productDaoFirebase').then( 
+            (dao) => (ProductDao = dao.default)
+        )
+        import('./carts/cartDaoFirebase').then( 
+            (daoCart) => (CartDao = daoCart.default)
+        )   
 
         break;
     

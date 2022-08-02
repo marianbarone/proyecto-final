@@ -4,7 +4,7 @@ import {request, response} from 'express'
 import dotenv from 'dotenv'
 
 dotenv.config()
-const port = process.env.PORT
+const port = 4000
 
 const app = express()
 

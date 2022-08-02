@@ -55,10 +55,13 @@ const addProductToCart = async (req: Request, resp: Response) => {
 		console.log(cartAndProduct)
 
 		if (cartAndProduct) {
-			resp.status(201).send('Producto agregado al carrito con éxito')
+			resp.status(400).send('No se pudo encontrar el producto');
+			return cartAndProduct
 		} else {
-			resp.status(400).send('No se pudo encontrar el producto')
+			resp.status(201).send('Producto agregado al carrito con éxito')
+			return cartAndProduct
 		}
+		
 	} catch (error) {
 		console.log(`Lo sentimos hubo un error ${error}`)
 	}
