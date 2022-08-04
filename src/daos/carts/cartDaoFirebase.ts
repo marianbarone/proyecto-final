@@ -6,4 +6,4 @@ class CartDaoFirebase extends FirebaseCartContainer {
     }
 }
 
-export default CartDaoFirebase;
+export default new CartDaoFirebase();

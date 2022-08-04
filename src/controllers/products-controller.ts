@@ -18,6 +18,7 @@
       let data = req.body;
       console.log(ProductDao)
       let newProduct = await ProductDao.addProduct(data)
+      console.log(newProduct)
 
       if (newProduct) {
         res.status(201).json({
@@ -75,4 +76,4 @@
     }
   };
 
-  export { getProducts, addProductsController, getById, updateProduct, deleteById };
+export { getProducts, addProductsController, getById, updateProduct, deleteById };

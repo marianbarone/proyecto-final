@@ -1,101 +1,143 @@
 import { FilterQuery, Types } from 'mongoose';
-import cartModel from '../models/cartModel'
-import productModel from '../models/productModel';
+import cartModel from '../models/cartModelFirebase'
+import productModel from '../models/productModelFirebase';
+import FirebaseProductContainer from './firebase-product-container';
 
 class FirebaseCartContainer {
-    constructor() { }
+    constructor() { 
 
-    async createCart(data: { products: [any]; }) {
-        try {
-            console.log('entre al try del container')
-            const newShoppingCart = await cartModel.create({
-                products: data.products
-            });
-            return newShoppingCart;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
     }
 
-    async addProduct(id, id_prod) {
-        const ObjectId = require('mongodb').ObjectID; 
-        const o_id = new ObjectId(id);
-        const o_id_prod = new ObjectId(id_prod)
-        try {
-            const selectedCart = await cartModel.findById({'_id': o_id})
-            const productToAdd = await productModel.findById({'_id': o_id_prod})
-            const option = {new: true}
-            console.log("selectedCart", selectedCart)
-            console.log("productToAdd", productToAdd)
+    // async createCart(data: { products: [any]; }) {
+    //     try {
+    //         console.log('entre al try del container')
 
-            if (selectedCart && productToAdd) {
-                const updatedDocument = await cartModel.findOneAndUpdate({selectedCart}, { $addToSet: { products: productToAdd} })
-                // const productsAddtion = selectedCart.products.push(productToAdd) ;
-                console.log('updatedDocument',updatedDocument)
-                // return await cartModel.updateOne(id, {products:productsAddtion})
-            } else {
-                console.log('Lo sentimos, no pudimos agregar el producto')
-            }
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
+    //         let firebaseProduct = new FirebaseProductContainer();
+    //         let products = [];
+    //         for (const product of data.products) {
+    //             let p = await firebaseProduct.getById(product);
+    //             // p.id = product;
+    //             // products.push(p);
+    //         }
 
-    async getAllProducts(id: FilterQuery<{ timestamp: Date; products: { type?: Types.ObjectId | undefined; ref?: unknown; }[]; }>) {
-        const ObjectId = require('mongodb').ObjectID; 
-        const o_id = new ObjectId(id);
-        try {
-            const carts = await cartModel
-                .find({'_id': o_id})
-                .populate({ path: 'products', select: 'timestamp title description code thumbnail price stock' });
-            return carts;
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    }
+    //         const random = Math.random().toString(36).substring(2);
+    //         const dateStr = Date.now().toString(36);
+    //         const id = random + dateStr;
+    //         let doc = cartModel.doc(`${id}`);
+    //         const response = await doc.create({
+    //             timestamp:Date.now(),
+    //             products:products
+    //         });
+    //         console.log(response);
+    //         return response;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return false;
+    //     }
+        
+    // }
 
-    async getCartById(id: any) {
-        const ObjectId = require('mongodb').ObjectID; 
-        const o_id = new ObjectId(id);
-        try {
-            const cart = await cartModel
-                .findById({'_id': o_id})
-                .populate({ path: 'products', select: 'timestamp title description code thumbnail price stock' });
-            return cart;
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    }
+    // async addProduct(id, data) {
+
+    //     try {
+    //         let firebaseProduct = new FirebaseProductContainer();
+    //         let products = [];
+    //         let cartData = await this.getCartById(id);
+
+    //         cartData.productos.map((p: any) => {
+    //             // products.push(p);
+    //         });
+
+    //         for (const product of data.products) {
+    //             let p = await firebaseProduct.getById(product);
+    //             if(p){
+    //                 let isNew = true;
+    //                 for (const prod of products) {
+    //                     if(prod.id == p.id){
+    //                         isNew= false;
+    //                     }
+    //                 }
+    //                 if(isNew){
+    //                     // p.id = product;
+    //                     // products.push(p);
+    //                 }
+    //             }
+    //         }
+
+    //         const doc = cartModel.doc(`${id}`);
+    //         const response = await doc.update({
+    //             productos:products
+    //         });
+    //         return response;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return false;
+    //     }
+    // }
+
+    // async getAllProducts(id: FilterQuery<{ timestamp: Date; products: { type?: Types.ObjectId | undefined; ref?: unknown; }[]; }>) {
+    //     try {
+    //         const querySnapshot = await cartModel.get();
+    //         let docs = querySnapshot.docs;
+    //         const response = docs.map((doc) => ({
+    //             id:doc.id,
+    //             timestamp:doc.data().timestamp,
+    //             productos:doc.data().products
+    //         }));
+    //         return response;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return [];
+    //     }
+    // }
+
+    // async getCartById(id) {
+    //     try {
+    //         let doc = cartModel.doc(`${id}`);
+    //         const cart = await doc.get();
+    //         const response = cart.data();
+    //         return response;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return [];
+    //     }
+    // }
 
 
-    async deleteCartById(id: any) {
-        try {
-            const deleteCart = await cartModel.findByIdAndDelete(id);
-            console.log(deleteCart);
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
+    // async deleteCartById(id: any) {
+    //     try {
+    //         const doc = cartModel.doc(`${id}`);
+    //         const item = await doc.delete();
+    //         return item;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return false;
+    //     }
+    // }
 
-    async deleteProductById(id: any, productId: any) {
-        try {
-            let addProduct = await cartModel.findByIdAndUpdate(id, {
-                $pull: {
-                    productos: productId
-                }
-            });
-            return addProduct;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
+    // async deleteProductById(id: any, productId: any) {
+    //     try {
+    //         let cartData = await this.getCartById(id);
+    //         let products = [];
+    //         // cartData.products.map((p) => {
+    //         //     products.push(p);
+    //         // });
+
+    //         let newProducts = products.filter(p => p.id != productId);
+
+    //         const doc = model.doc(`${id}`);
+    //         const response = await doc.update({
+    //             productos:newProducts
+    //         });
+
+    //         return response;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return false;
+    //     }
+    // }   
+
 }
 
 export default FirebaseCartContainer;
+

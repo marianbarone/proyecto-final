@@ -1,20 +1,6 @@
 import { Request, Response } from 'express'
 import { CartDao } from '../daos'
 
-// const saveCart = new cartContainer()
-
-// let carts: Cart[] = []
-// let products: Product[] = []
-
-
-// const readProds = () => {
-//     dbController.readFile().then(response => {
-//         products = response
-//     })
-// }
-
-// readProds()
-
 const createCart = async (req: Request, resp: Response) => {
 	try {
 		console.log('entre al try del controller')

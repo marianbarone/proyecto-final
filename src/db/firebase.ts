@@ -9,6 +9,8 @@ admin.initializeApp({
 });
 
 export const db = admin.firestore();
+// export const Products = db.collection('products');
+// export const Carts = db.collection('carts')
 
 console.log(db)
 console.log('Se ha establecido la conexion con Firebase')
