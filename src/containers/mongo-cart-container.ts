@@ -87,7 +87,7 @@ class MongoCartContainer {
         try {
             let addProduct = await cartModel.findByIdAndUpdate(id, {
                 $pull: {
-                    productos: productId
+                    products: productId
                 }
             });
             return addProduct;

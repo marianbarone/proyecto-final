@@ -4,7 +4,7 @@
   //GetAll
   const getProducts = async (req: Request, res: Response) => {
     try {
-      let productos = await ProductDao.getProducts();
+      let productos = await ProductDao.getAll();
       res.json(productos);
     } catch (err: any) {
       console.log("No existen productos", err);
@@ -15,9 +15,9 @@
 
   const addProductsController = async (req: any, res: any) => {
     try {
-      let data = req.body;
+      let product = req.body;
       console.log(ProductDao)
-      let newProduct = await ProductDao.addProduct(data)
+      let newProduct = await ProductDao.addProduct(product)
       console.log(newProduct)
 
       if (newProduct) {

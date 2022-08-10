@@ -19,21 +19,14 @@ class FirebaseProductContainer {
   constructor() {
   }
 
-  async addProduct(data: { title: any; description: any; code: any; thumbnail: any; price: any; stock: any; }) {
+  async addProduct(product: any): Promise<any | void> {
     try {
       console.log('entre al try del container')
-      const random = Math.random().toString(36).substring(2);
-      const dateStr = Date.now().toString(36);
-      const id = random + dateStr;
-      let doc = productModel.doc(`${id}`);
-      const response = await doc.create({
-        title: data.title,
-        description: data.description,
-        code: data.code,
-        thumbnail: data.thumbnail,
-        price: data.price,
-        stock: data.stock
-      })
+      // const random = Math.random().toString(36).substring(2);
+      // const dateStr = Date.now().toString(36);
+      // const id = random + dateStr;
+      let doc = productModel.doc();
+      const response = await doc.create(product)
       return response
     } catch (e) {
       console.log(e)
@@ -46,12 +39,12 @@ class FirebaseProductContainer {
       let docs = querySnapshot.docs;
       const response = docs.map((doc) => ({
           id:doc.id,
-          timestamp :doc.data().timestamp,
-          nombre:doc.data().nombre,
-          descripcion:doc.data().descripcion,
-          codigo:doc.data().codigo,
-          foto:doc.data().foto,
-          precio:doc.data().precio,
+          timestamp:doc.data().timestamp,
+          title:doc.data().title,
+          description:doc.data().description,
+          code:doc.data().codigo,
+          thumbnail:doc.data().thumbnail,
+          price:doc.data().price,
           stock:doc.data().stock
       }));
       return response;
@@ -63,7 +56,7 @@ class FirebaseProductContainer {
 
   async getById(id: any){
     try {
-      let doc = productModel.doc(`${id}`);
+      let doc = productModel.doc(id);
       const product = await doc.get();
       const response = product.data();
       console.log(response);

@@ -7,10 +7,10 @@ let CartDao:any
 switch(process.env.DATABASE){
     case'firebase':
         import('./products/productDaoFirebase').then( 
-            (dao) => (ProductDao = dao)
+            (dao) => (ProductDao = dao.default)
         )
         import('./carts/cartDaoFirebase').then( 
-            (daoCart) => (CartDao = daoCart)
+            (daoCart) => (CartDao = daoCart.default)
         )   
 
         break;

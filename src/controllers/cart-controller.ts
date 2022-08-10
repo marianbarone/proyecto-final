@@ -1,14 +1,12 @@
 import { Request, Response } from 'express'
 import { CartDao } from '../daos'
 
-const createCart = async (req: Request, resp: Response) => {
+const createCart = async (_req: Request, resp: Response) => {
 	try {
-		console.log('entre al try del controller')
-    	const cartData = req.body;
-		console.log("cartData",cartData)
-		const newCart = await CartDao.createCart(cartData)
+    	// const cartData = req.body;
+		const newCart = await CartDao.createCart()
 
-		resp.status(201).send(`Carrito creado con éxito, id:${newCart.id}`)
+		resp.status(201).send(`Carrito creado con éxito`)
 		return newCart
 
 	} catch (error) {
