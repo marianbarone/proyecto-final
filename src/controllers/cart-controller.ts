@@ -3,11 +3,8 @@ import { CartDao } from '../daos'
 
 const createCart = async (_req: Request, resp: Response) => {
 	try {
-    	// const cartData = req.body;
 		const newCart = await CartDao.createCart()
-
 		resp.status(201).send(`Carrito creado con éxito`)
-		return newCart
 
 	} catch (error) {
 		console.log(`Lo sentimos hubo un error ${error}`)
@@ -31,19 +28,17 @@ const deleteCart = async (req: Request, resp: Response) => {
 
 const addProductToCart = async (req: Request, resp: Response) => {
 	try {
-		const cartId = (req.params.id) 
-		const productId = (req.params.id_prod) 
+		const cartId = req.params.id 
+		const productId = req.params.id_prod
 		const cartAndProduct = await CartDao.addProduct(cartId, productId)
 		console.log(cartId)
 		console.log(productId)
 		console.log(cartAndProduct)
 
-		if (cartAndProduct) {
+		if (!cartAndProduct) {
 			resp.status(400).send('No se pudo encontrar el producto');
-			return cartAndProduct
 		} else {
 			resp.status(201).send('Producto agregado al carrito con éxito')
-			return cartAndProduct
 		}
 		
 	} catch (error) {
@@ -55,6 +50,7 @@ const getCartProducts = async (req: Request, resp: Response) => {
 	try {
 		const cartId = req.params.id
 		const cartProducts = await CartDao.getAllProducts(cartId)
+		console.log("cartProducts",cartProducts)
 
 		if ( cartProducts ) {
 		resp.status(200).send(cartProducts)

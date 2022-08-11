@@ -28,25 +28,31 @@ class FirebaseCartContainer {
 
         try {
             
-            const cart = await cartModel.doc(id).get();
-            // const cartData = await cart.get()
-            let product = await productModel.doc(id_prod).get();
-            // let productItem = await product.get()
-            console.log('product',product)
-            // console.log('productItem',productItem)
+            const cart = (await cartModel.doc(id).get()).data();
 
-            console.log('cart', cart)
-            const productsAddtion = [...cart.products, product];
-            return await this.set(id, { products: productsAddtion })
+            const product = (await productModel.doc(id_prod).get()).data();
 
-            // console.log(response)        
-        } catch (error) {
+            console.log("product", product);
+            console.log("cart", cart);
+
+            if (!cart) {
+                return { msg: "No hemos podido encontrar el carrito" };
+            }
+            if (!product) {
+                return { msg: "No hemos podido encontrar el producto" };
+            } else {
+                const newProduct = await cartModel
+                .doc(id)
+                .update({ products: product });
+            return newProduct
+            }
+            } catch (error) {
             console.log(error);
             return false;
-        }
+            }
     }
 
-    async getAllProducts(id: FilterQuery<{ timestamp: Date; products: { type?: Types.ObjectId | undefined; ref?: unknown; }[]; }>) {
+    async getAllProducts(id) {
         try {
             const querySnapshot = await cartModel.get();
             let docs = querySnapshot.docs;
@@ -62,7 +68,7 @@ class FirebaseCartContainer {
         }
     }
 
-    async getCartById(id) {
+    async getCartById(id: string) {
         try {
             let doc = await cartModel.doc(id).get();
             // const cart = await doc.get();
@@ -75,39 +81,50 @@ class FirebaseCartContainer {
     }
 
 
-    // async deleteCartById(id: any) {
-    //     try {
-    //         const doc = cartModel.doc(`${id}`);
-    //         const item = await doc.delete();
-    //         return item;
-    //     } catch (error) {
-    //         console.log(error);
-    //         return false;
-    //     }
-    // }
+    async deleteCart(id: string) {
+        try {
+            const doc = await cartModel.doc(`${id}`).delete();
+            console.log('deletedcart', doc)
+            return doc
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
 
-    // async deleteProductById(id: any, productId: any) {
-    //     try {
-    //         let cartData = await this.getCartById(id);
-    //         let products = [];
-    //         cartData.products.map((p) => {
-    //             products.push(p);
-    //         });
+    async deleteProductById(id: any, id_prod: any) {
+        try {
+            const cart = (await cartModel.doc(id).get()).data();
+            const product = (await productModel.doc(id_prod).get()).data();
 
-    //         let newProducts = products.filter(p => p.id != productId);
-
-    //         const doc = model.doc(`${id}`);
-    //         const response = await doc.update({
-    //             productos:newProducts
-    //         });
-
-    //         return response;
-    //     } catch (error) {
-    //         console.log(error);
-    //         return false;
-    //     }
-    // }   
-
+            if(cart) {
+                if(product) {
+                    if(cart.products.length > 0) {
+                        const otherProducts = cart.products.filter(item => item.id !== id_prod);
+                        const deletedProduct = await cartModel
+                        .doc(id)
+                        .update({ products: product });
+                        return deletedProduct
+                    } else {
+                        const err: any = new Error('Cart does not have products to delete!');
+                        err.status = 400;
+                        throw err;
+                    };
+                } else {
+                    const err: any = new Error('Product does not exist!');
+                    err.status = 400;
+                    throw err;
+                }
+            } else {
+                const err: any = new Error('Cart does not exist!');
+                err.status = 400;
+                throw err;
+            };
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    } 
 }
 
 export default FirebaseCartContainer;
